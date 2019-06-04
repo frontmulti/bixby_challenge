@@ -2,4 +2,5 @@
 
 ## 시작하기
 ``npm install``
+
 ``node app.js``
