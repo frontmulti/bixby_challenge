@@ -3,12 +3,12 @@ var http = require('http');
 var app = express();
 var server = http.createServer(app);
 
-var API_FATSECRET = require('./service')('fatsecret');
 var API_ELASTIC = require('./service')('elastic');
 
-app.get('/', function(req, res) {
-    
-    API_FATSECRET.fatsecret_test('test', function(err, result) {
+app.post('/food', function(req, res) {
+    var foodName = req.body.foodName;
+    var calorie = req.body.calorie;
+    API_ELASTIC.addElasticData(foodName, calorie, function(err, result) {
         if (!err) {
             res.json(result);
         } else {
@@ -16,6 +16,16 @@ app.get('/', function(req, res) {
         }
     })
 });
+
+app.get('/food', function(req, res) {
+    API_ELASTIC.getElasticData('foodName', function(err, result) {
+        if (!err) {
+            res.json(result);
+        } else {
+            res.json(err);
+        }
+    })
+})
 
 server.listen(9090, function() {
     console.log('Express server listening on port ' + server.address().port);

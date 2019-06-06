@@ -9,6 +9,8 @@ module.exports = function (callee) {
         };
         // const PORT = '80';
         // const BASE_PATH = '/rest';
+        const INDEX = 'foods';
+        const TYPE = 'food';
         (function() {
             switch (callee) {
                 case 'dev':
@@ -20,31 +22,41 @@ module.exports = function (callee) {
                 case 'elastic':
                     HOST = 'http://172.104.114.192:9000';
                     break;
-                case 'fatsecret':
-                    HOST = 'https://platform.fatsecret.com/rest/server.api';
-                    break;
+                // case 'fatsecret':
+                //     HOST = 'https://platform.fatsecret.com/rest/server.api';
+                //     break;
                 default:
                     HOST = 'http://localhost';
             }
         })(callee);
         return {
-            fatsecret_test : function (food_name, callback) {
-                OPTIONS.url = HOST;
-                OPTIONS.body = JSON.stringify({
-                    "food_name": food_name
-                });
-                request.post(OPTIONS, function (err, res, result) {
-                    console.log('res', res);
-                    statusCodeErrorHandler(res.statusCode, callback, result);
-                })
+            // fatsecret_test : function (food_name, callback) {
+            //     OPTIONS.url = HOST;
+            //     OPTIONS.body = JSON.stringify({
+            //         "food_name": food_name
+            //     });
+            //     request.post(OPTIONS, function (err, res, result) {
+            //         console.log('res', res);
+            //         statusCodeErrorHandler(res.statusCode, callback, result);
+            //     })
                 
-            },
-            elastic_test : function (fatsecret_data, calorie, callback) {
+            // },
+            addElasticData : function (foodName, calorie, callback) {
                 OPTIONS.url = HOST;
                 OPTIONS.body = JSON.stringify({
-                    //TODO
+                    // TODO
                 });
                 request.put(OPTIONS, function (err, res, result) {
+                    statusCodeErrorHandler(res.statusCode, callback, result);
+                })
+            },
+            getElasticData : function (foodName, callback) {
+                OPTIONS.url = HOST + "/" + INDEX + "/" + TYPE;
+                OPTIONS.qs = {
+                    "foodName": foodName,
+                    "calorie": calorie
+                }
+                request.get(OPTIONS, function (err, res, result) {
                     statusCodeErrorHandler(res.statusCode, callback, result);
                 })
             }
